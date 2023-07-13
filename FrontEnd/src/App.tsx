@@ -7,6 +7,7 @@ import UploadArt from "./components/Upload/UploadArt";
 import Login from "./pages/Login";
 import { useState, createContext } from "react";
 import PageNotFound from "./pages/PageNotFound";
+
 export type LoggedInContextType = {
   loggedIn: boolean;
   updateLoginValue: (type: string) => void;

@@ -14,6 +14,7 @@ import { useNavigate } from "react-router-dom";
 import { LoggedInContext, LoggedInContextType } from "../../App";
 import { FiShoppingCart } from "react-icons/fi";
 import { RiWallet3Line } from "react-icons/ri";
+import { ConnectWallet } from "@thirdweb-dev/react";
 
 const User: React.FC = () => {
   const navigate = useNavigate();
@@ -65,29 +66,18 @@ const User: React.FC = () => {
                 Settings
               </MenuItem>
               <MenuDivider></MenuDivider>
-              <Button
-                width="100%"
-                mb={0}
-                background="red"
-                color="white"
-                onClick={handleLogin}
-              >
-                Disconnect Wallet
-              </Button>
             </MenuList>
           </Menu>
         </>
       ) : (
-        <Button
-          width="100%"
-          onClick={handleLogin}
-          backgroundColor="#045de9"
-          backgroundImage="linear-gradient(315deg, #045de9 0%, #09c6f9 74%)"
-          leftIcon={<RiWallet3Line />}
-          size="md"
-        >
-          Connect Wallet
-        </Button>
+        <ConnectWallet
+          dropdownPosition={{
+            side: "right", // "top" | "bottom" | "left" | "right";
+            align: "center", // "start" | "center" | "end";
+          }}
+          theme="dark"
+          btnTitle="Connect Wallet"
+        />
       )}
     </Flex>
   );

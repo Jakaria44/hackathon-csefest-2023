@@ -1,13 +1,27 @@
 import ReactDOM from "react-dom/client";
 import { ChakraProvider } from "@chakra-ui/react";
 import { BrowserRouter } from "react-router-dom";
-import App from "./App.tsx";
+import {
+  ThirdwebProvider,
+  metamaskWallet,
+  coinbaseWallet,
+  walletConnect,
+  } from "@thirdweb-dev/react";
+import { Sepolia } from "@thirdweb-dev/chains";
+import App from "./App";
 import "./index.css";
+import Navbar from "./components/Navbar/Navbar";
 
 ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
+
   <BrowserRouter>
     <ChakraProvider>
-      <App />
+      <ThirdwebProvider
+      activeChain={Sepolia}
+      supportedWallets={[metamaskWallet(), coinbaseWallet(), walletConnect()]}>
+
+        <App />
+      </ThirdwebProvider>
     </ChakraProvider>
   </BrowserRouter>
 );

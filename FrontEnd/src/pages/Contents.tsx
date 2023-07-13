@@ -11,14 +11,17 @@ const Contents = () => {
     <>
       {contentType ? (
         <>
-          <Tabbar teacherOrSubject={teacherOrSubject} />
-          <ContentGrid type={contentType} teacherOrSubject={teacherOrSubject} />
+          <Tabbar />
+          <ContentGrid />
         </>
       ) : (
-        <Tabbar teacherOrSubject={teacherOrSubject} />
+        <Tabbar />
       )}
     </>
   );
 };
 
 export default Contents;
+
+// teacherOrSubject={teacherOrSubject}
+//  type={contentType} teacherOrSubject={teacherOrSubject}

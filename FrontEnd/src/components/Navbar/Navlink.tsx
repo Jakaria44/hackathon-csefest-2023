@@ -7,6 +7,7 @@ type NavLinkProps = {
 };
 const NavLink: React.FC<NavLinkProps> = ({ page, children }: NavLinkProps) => (
   <Link
+    color={"white"}
     as={RouterLink}
     px={2}
     py={1}
