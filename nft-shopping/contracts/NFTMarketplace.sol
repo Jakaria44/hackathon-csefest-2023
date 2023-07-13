@@ -23,12 +23,12 @@ contract ArtPlatform  {
     mapping(address => Artwork) public artworkOfSupplier;
     mapping(uint256=>address) public supplier;
     struct Details {
+        string description;
         address[] certificatesOfArtwork;
         uint256[] artworkBids;
         uint256 quantity; // quantity as stock in the marketplace
     }
 
-    mapping(uint256 => string) public descriptions;
 
     Artwork[] public artworks;
     mapping(uint256 => Details) public detailsOfArtwork;
@@ -61,7 +61,6 @@ contract ArtPlatform  {
     // getters:
 
     function getAllArtworks() public view returns (Artwork[] memory) {
-        require(artworks.length == 0, "No Artworks");
         return artworks;
     }
 
@@ -78,14 +77,17 @@ contract ArtPlatform  {
     function getArtworkBids(uint256 tokenId) public view returns (uint256[] memory) {
         return detailsOfArtwork[tokenId].artworkBids;
     }
+    function getDescription(uint256 tokenId) public view returns (string memory) {
+        return detailsOfArtwork[tokenId].description;
+    }
 
     function getArtworkCount() public view returns (uint256) {
         return artworkCounter;
     }
 
     // TO DO: IMPLEMENT
-    // function getUser(address _adderss) public view returns (User) {
-    //     // if(userDetails[_address]._type == "") return
+    // function getUser(address _adderss) public view returns () {
+    //     if(userDetails[_address]._type == "") return 
     // }
 
     function isVerifier(address _address) public view returns (bool) {
@@ -93,13 +95,14 @@ contract ArtPlatform  {
         return userType[_address] == User.VERIFIER;
     }
 
-    // function registerVerifier() public  {
-    //     // Registration logic for verifiers
-    //     // Add your implementation here
-    //     require(!isVerifier(msg.sender), "Already a verifier");
-    //     verifiers.push(msg.sender);
-    //     // emit an event that id has become a verifier.
-    // }
+    function registerVerifier() public  {
+        // Registration logic for verifiers
+        // Add your implementation here
+        require(!isVerifier(msg.sender), "Already a verifier");
+        verifiers.push(msg.sender);
+        userType[msg.sender] = User.VERIFIER;
+        // emit an event that id has become a verifier.
+    }
 
     function addArtwork(
         string memory _CID,
@@ -109,7 +112,8 @@ contract ArtPlatform  {
         bool _isAuctioned,
         uint256 _auctionEndTime,
         string memory _title,
-        string memory _genre
+        string memory _genre ,
+        string memory _description
     ) external returns (uint256) {
         //returns the artworkID
 
@@ -131,12 +135,13 @@ contract ArtPlatform  {
         supplier[artworkId] = msg.sender;
         // to check when updating supply
         
-        // detailsOfArtwork[artworkId] = Details({
-        //     quantity: 0
-        // });
+        detailsOfArtwork[artworkId].quantity = _quantity;
+        detailsOfArtwork[artworkId].description = _description;
+
         emit ArtworkAdded(artworkId);
         // users.push(msg.sender);
         // userDetails[msg.sender].artworks_of_user.push()
+        userType[msg.sender]= User.SUPPLIER;
         return artworkId;
     }
 
@@ -152,34 +157,31 @@ contract ArtPlatform  {
         return true;
     }
 
-    // function startArtworkAuction(
-    //     uint256 _artworkId,
-    //     uint256 _auctionEndTime
-    // ) external onlyArtworkOwner(_artworkId) {
-    //     Artwork storage artwork = artworks[_artworkId];
-    //     require(!artwork.isAuctioned, "Artwork is already auctioned");
-    //     artwork.isAuctioned = true;
-    //     artwork.auctionEndTime = _auctionEndTime;
 
-    //     emit ArtworkAuctionStarted(_artworkId, _auctionEndTime);
-    // }
+    function startArtworkAuction(
+        uint256 _artworkId,
+        uint256 _auctionEndTime
+    ) external onlyArtworkOwner(_artworkId) {
+        Artwork storage artwork = artworks[_artworkId];
+        require(!artwork.isAuctioned, "Artwork is already auctioned");
+        artwork.isAuctioned = true;
+        artwork.auctionEndTime = _auctionEndTime;
 
-    // function placeBid(uint256 _artworkId, uint256 _amount) external {
-    //     Artwork storage artwork = artworks[_artworkId];
+        emit ArtworkAuctionStarted(_artworkId, _auctionEndTime);
+    }
 
-    //     require(artwork.isAuctioned, "Artwork is not available for auction");
-    //     require(block.timestamp < artwork.auctionEndTime, "Auction has ended");
+    function placeBid(uint256 _artworkId, uint256 _amount) external {
+        Artwork storage artwork = artworks[_artworkId];
 
-    //     detailsOfArtwork[_artworkId].artworkBids.push(_amount); 
+        require(artwork.isAuctioned, "Artwork is not available for auction");
+        require(block.timestamp < artwork.auctionEndTime, "Auction has ended");
+        uint256[] storage  bids = detailsOfArtwork[_artworkId].artworkBids;
+        bids.push(_amount); 
 
-    //     emit ArtworkBidPlaced(_artworkId, msg.sender, _amount);
-    // }
+        emit ArtworkBidPlaced(_artworkId, msg.sender, _amount);
+    }
 
-    // function issueCertificate(uint256 _artworkId) external onlyVerifier {
-    //     detailsOfArtwork[_artworkId].push(msg.sender);
-    //     emit ArtworkCertificateIssued(_artworkId, msg.sender);
-    // }
-    function issueCertificate(uint256 _artworkId) external onlyVerifier {
+    function issueCertificate(uint256 _artworkId) public onlyVerifier {
         Details storage details = detailsOfArtwork[_artworkId];
         details.certificatesOfArtwork.push(msg.sender);
         emit ArtworkCertificateIssued(_artworkId, msg.sender);
