@@ -1,0 +1,101 @@
+:root {
+  --background: #3c343d;
+  --background-card: #6b626c;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+.background {
+  height: 580px;
+  background-image: linear-gradient(45deg, #04cdff, #8fd1fc);
+  display: grid;
+  place-items: center;
+}
+
+.gallery {
+  display: flex;
+  left: calc(50% - 330px);
+}
+
+.card {
+  padding: 2px;
+  position: relative;
+  background-color: white;
+  left: 0px;
+  width: 280px;
+  height: 430px;
+  border-radius: 8px;
+  transition: 1s ease-in-out;
+  overflow: hidden;
+  box-shadow: 0 5px 12px rgba(0, 0, 0, 0.5);
+}
+
+/* Default styles for all screen sizes */
+.card:not(:first-child) {
+  margin-left: -225px;
+}
+
+/* Styles for screen sizes equal to or greater than 768px */
+@media (min-width: 768px) {
+  .card:not(:first-child) {
+    margin-left: -100x;
+  }
+}
+
+/* Styles for screen sizes equal to or greater than 992px */
+@media (min-width: 992px) {
+  .card:not(:first-child) {
+    margin-left: -100px;
+  }
+}
+
+/* Styles for screen sizes equal to or greater than 1200px */
+@media (min-width: 1200px) {
+  .card:not(:first-child) {
+    margin-left: -45px;
+  }
+}
+
+.card:hover {
+  transform: translate(-120px, -100px);
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.card:hover ~ .card {
+  left: 55px;
+}
+
+.card img {
+  width: 280px;
+  object-fit: cover;
+  border-radius: 4px;
+}
+
+@media screen and (max-width: 767px) {
+  /* Adjust the width and height for smaller screens */
+  .responsive-iframe {
+    width: 100%;
+    height: 400px;
+  }
+}
+
+@media screen and (min-width: 768px) and (max-width: 1023px) {
+  /* Adjust the width and height for medium-sized screens */
+  .responsive-iframe {
+    width: 100%;
+    height: 500px;
+  }
+}
+
+@media screen and (min-width: 1024px) {
+  /* Adjust the width and height for larger screens */
+  .responsive-iframe {
+    width: 100%;
+    height: 600px;
+  }
+}
