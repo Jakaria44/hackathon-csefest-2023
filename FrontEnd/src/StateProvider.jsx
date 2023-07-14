@@ -4,17 +4,17 @@ import { ThirdwebSDK } from "@thirdweb-dev/sdk/evm";
 import { Sepolia } from "@thirdweb-dev/chains";
 
 const sdk = new ThirdwebSDK(Sepolia);
-const contractAddress = "0x60a778B2eF99C8105004d896333ef4215b95d98B";
+const contractAddress = "0xe611ad45aA3F35270f52D66c6230bcC558A35EdD";
 
 export const StateContext = createContext();
 
 export const StateContextProvider = ({ children }) => {
   //   const contract = sdk.getContract(contractAddress);
-  const contract = useContract(contractAddress);
+  const {contract} = useContract(contractAddress);
 
   const getData = async () => {
     console.log("getData");
-    const { data, isLoading } = useContractRead(contract, "artworks", [0]);
+    const { data, isLoading } = useContractRead(contract, "artworks");
     if (data) {
       console.log("Data paisi");
       const processedData = data[0].map((item) => {

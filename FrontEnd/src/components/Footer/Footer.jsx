@@ -28,23 +28,23 @@ const Footer = () => {
             Artisan's Oasis
           </Text>
         </Flex>
-        <Text>© 2023 Minute Prep. All rights reserved</Text>
+        <Text>© 2023  All rights reserved</Text>
         <Stack direction={"row"} spacing={6}>
           <SocialButton
             label={"Facebook"}
-            href={"https://www.facebook.com/minuteprep/"}
+            //href={"https://www.facebook.com/minuteprep/"}
           >
             <FaFacebook />
           </SocialButton>
           <SocialButton
             label={"YouTube"}
-            href={"https://www.youtube.com/@MinutePrep"}
+            //href={"https://www.youtube.com/@MinutePrep"}
           >
             <FaYoutube />
           </SocialButton>
           <SocialButton
             label={"Instagram"}
-            href={"https://www.instagram.com/minute_prep/?hl=en"}
+            //href={"https://www.instagram.com/minute_prep/?hl=en"}
           >
             <FaInstagram />
           </SocialButton>

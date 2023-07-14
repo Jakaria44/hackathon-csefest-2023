@@ -1,6 +1,19 @@
-import { Box, Heading, Link, Flex, Tag, Image } from "@chakra-ui/react";
+import { Box, Heading, Link, Flex, Tag, Image, Button } from "@chakra-ui/react";
+import { useNavigate } from "react-router-dom";
 
-export const Card = ({ title, genres, image }) => {
+export const Card = (props) => {
+  const navigate = useNavigate();
+  
+  const CID = props[0]; //cid from ipfs
+  const price=props[1]; //price of the artwork
+  const isLimitedEdition = props[2];
+  const isAuctioned = props[3]; //is auctioned
+  const auctionEndTime = props[4]; //
+  const genre = props[5]; //
+  const title = props[6]; //
+  const id = props[7]; 
+
+
   return (
     <Box
       maxW="414px"
@@ -12,19 +25,17 @@ export const Card = ({ title, genres, image }) => {
       m={2}
       p={4}
     >
-      <Image src={image} alt={title} />
+      <Image src={CID} alt={title} />
       <Box mt={4}>
         <Heading as="h2" size="md">
           {title}
         </Heading>
         <Flex mt={4}>
-          {genres.map((genre) => (
-            <Tag key={genre} size="sm" mr={2}>
-              {genre}
-            </Tag>
-          ))}
+          {genre}
         </Flex>
-        I
+        I<Button onClick={()=>{
+           navigate("/details/${id}");
+        }} > See Details</Button>
       </Box>
     </Box>
   );
