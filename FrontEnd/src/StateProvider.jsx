@@ -1,5 +1,5 @@
-import { useContext,useEffect, useState, createContext } from "react";
-import { useContractRead } from "@thirdweb-dev/react";
+import { useContext, createContext } from "react";
+import { useContract, useContractRead } from "@thirdweb-dev/react";
 import { ThirdwebSDK } from "@thirdweb-dev/sdk/evm";
 import { Sepolia } from "@thirdweb-dev/chains";
 
@@ -9,17 +9,8 @@ const contractAddress = "0x60a778B2eF99C8105004d896333ef4215b95d98B";
 export const StateContext = createContext();
 
 export const StateContextProvider = ({ children }) => {
-  const [count, isLoadingCount] = useState(0);
-  const contract = sdk.getContract(contractAddress);
-  const { data: artworkCounter, isLoading: countLoading } = useContractRead(contract, "artworkCounter");
-  
-  useEffect(() => {
-    if (!countLoading) {
-      setSelectedValue(count);
-      console.log(count)
-    }
-  }, [countLoading, artworkCounter]);
-
+  //   const contract = sdk.getContract(contractAddress);
+  const contract = useContract(contractAddress);
 
   const getData = async () => {
     console.log("getData");
