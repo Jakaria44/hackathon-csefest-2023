@@ -163,6 +163,7 @@ const contractAddress = "0xe611ad45aA3F35270f52D66c6230bcC558A35EdD";
 const ipfs = create({ host: "localhost", port: 5002, protocol: "http" }); // Configure IPFS client
 
 export default function UploadArt() {
+  const {contract} = useContract(contractAddress);
   const [selectedImage, setSelectedImage] = useState(null);
 
   //   const handleImageChange = (event) => {
