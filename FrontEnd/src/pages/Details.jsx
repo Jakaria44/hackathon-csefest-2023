@@ -1,57 +1,68 @@
-import { useParams } from 'ipfs-http-client/dist/src'
-import React from 'react'
 
+import {useParams} from "react-router-dom";
+import React, {useEffect} from 'react'
 
 import { useContract, useContractRead } from "@thirdweb-dev/react";
 import { ThirdwebSDK } from "@thirdweb-dev/sdk/evm";
 import { Sepolia } from "@thirdweb-dev/chains";
 
 const sdk = new ThirdwebSDK(Sepolia);
-const contractAddress = `0x${process.env.PUBLIC_KEY}`;
+const contractAddress = "0xe611ad45aA3F35270f52D66c6230bcC558A35EdD";
+const Details = () => {
 
-export const Details = () => {
+  const {contract} = useContract(contractAddress);
+  const params = useParams()
+  const id = params.id;
+  const { data: certificates, isLoading: cert_loading } = useContractRead(contract, "getCertificateOfArtwork", [id])
+  const { data:bids, isLoading: bidsLoading } = useContractRead(contract, "getArtworkBids", [id])
 
+  const {data: description, isLoading: descriptionLoading} = useContractRead(contract, "getDescription", [id]);
 
-    const params = useParams()
-    const id = params.id;
-    const { data: certificates, isLoading: cert_loading } = useContractRead(contract, "getCertificateOfArtwork", [tokenId])
-    const { data:bids, isLoading: bidsLoading } = useContractRead(contract, "getArtworkBids", [tokenId])
-
-
+  useEffect(()=>{
+      if(!cert_loading){
+        console.log("cert: ", certificates);
+      }
+      if(!bidsLoading){
+      console.log("cert: ", bids);
+    }
+  }, [cert_loading, bidsLoading])
 
   return (
+
     <div>
     <h1>Details</h1>
-    <h3 > Certificates</h3>
+    <h3 >Description : {description}</h3>
+    <h3 > Certificates : </h3>
        <ol>
-            {!cert_loading && 
-                certificates.map(certificate =>(
-                    <li key={certificate.id}>
+            {!cert_loading &&
+                certificates.map((certificate, index) =>(
+                    <li key={index}>
                         <i >
-                            {certificate.name}
+                            {certificate}
                         </i>
                     </li>
                 ))
             }
 
-        </ol> 
+        </ol>
 <hr/>
     <h3> All bids:</h3>
     <ol>
-            {!bidsLoading && 
+            {!bidsLoading &&
                 bids.map((bid, index) =>(
                     <li key={index}>
                         <i >
-                            {bid}
+                            {parseInt(bid._hex.toString(), 16)}
                         </i>
                     </li>
                 ))
             }
 
-        </ol> 
+        </ol>
 
     </div>
 
   );
   
 }
+export default Details;

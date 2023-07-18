@@ -8,6 +8,7 @@ import Login from "./pages/Login";
 import { useState, createContext } from "react";
 import PageNotFound from "./pages/PageNotFound";
 import { StateContextProvider } from "./StateProvider";
+import Details from "./pages/Details";
 
 export const LoggedInContext = createContext();
 
@@ -37,6 +38,7 @@ function App() {
           />
           <Route path="/upload" element={<UploadArt />} />
           <Route path="/login" element={<Login />} />
+          <Route path="/details/:id" element={<Details />} />
           <Route path="*" element={<PageNotFound />} />
         </Routes>
 

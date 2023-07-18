@@ -8,32 +8,31 @@ import { ThirdwebSDK } from "@thirdweb-dev/sdk/evm";
 import { Sepolia } from "@thirdweb-dev/chains";
 
 const sdk = new ThirdwebSDK(Sepolia);
-const contractAddress = `0x${process.env.PUBLIC_KEY}`;
+const contractAddress = "0xe611ad45aA3F35270f52D66c6230bcC558A35EdD";
 
 const ContentGrid = () => {
   const {contract} = useContract(contractAddress);
   const [cardData, setCardData] = useState([]);
   const { data: data, isLoading : isLoading } = useContractRead(contract, "getAllArtworks" );
-  const {data : count, isLoading: countLoading} = useContractRead(contract, "artworkCounter");
-  const {counter, setCounter} = useState(0);
+  const {data : count, isLoading: countLoading} = useContractRead(contract, "getArtworkCount");
+  const [counter, setCounter] = useState(0);
   useEffect(() => {
     if(!isLoading) {
       setCardData(data);
-      console.log(data[0]);
+
     }
   }, [isLoading, data]);
 
   useEffect(() => {
     if(!countLoading) {
-      setCounter(count);
+      console.log("counter : ", count);
     }
   }, [countLoading, count]);
-  useEffect(()=>{
-    console.log("in contentGrid")
-  }, []);
+
   return (
     <>
-      <div>{counter}</div>
+      {!countLoading && <div>count : {parseInt(count._hex.toString(), 16)}</div>}
+      {countLoading && <div>LOADING ...</div>}
       <hr/>
       <Wrap justify="center" minH={"75vh"}>
         {!isLoading &&
