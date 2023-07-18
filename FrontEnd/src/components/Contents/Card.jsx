@@ -1,15 +1,14 @@
 import { Box, Heading, Link, Flex, Tag, Image, Button } from "@chakra-ui/react";
 import { useNavigate } from "react-router-dom";
-import {useEffect} from "react";
+import {useEffect, useState} from "react";
+import {MediaRenderer} from "@thirdweb-dev/react";
 
 export const Card = (props) => {
-  const navigate = useNavigate();
+  const navigate = useNavigate()
+  // const mediaRenderer = new MediaRenderer();
 
   const {CID, price,isLimitedEdition, isAuctioned,auctionEndTime,genre,title ,id} = props;
 
-  useEffect(()=>{
-    console.log("price");
-  }, []);
   return (
     <Box
       maxW="414px"
@@ -21,7 +20,8 @@ export const Card = (props) => {
       m={2}
       p={4}
     >
-      <Image src={CID} alt={title} />
+      {/*{cidReal && <p>image not available</p>}*/}
+      {  (<MediaRenderer src={CID} alt ={title}/>)}
       <Box mt={4}>
         <Heading as="h2" size="md">
           {title}
