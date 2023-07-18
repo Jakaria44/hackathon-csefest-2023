@@ -5,6 +5,8 @@ type NavLinkProps = {
   page: string;
   children: ReactNode;
 };
+// @ts-ignore
+
 const NavLink: React.FC<NavLinkProps> = ({ page, children }: NavLinkProps) => (
   <Link
     color={"white"}

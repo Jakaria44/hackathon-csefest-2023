@@ -14,6 +14,7 @@ import NavLink from "./Navlink";
 
 const Links = ["Home", "Gallery", "Upload"];
 
+// @ts-ignore
 const Navbar: React.FC = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   return (

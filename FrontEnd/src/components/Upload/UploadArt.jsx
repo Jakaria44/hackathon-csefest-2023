@@ -158,7 +158,7 @@ import { ThirdwebSDK, useContract, useContractWrite } from "@thirdweb-dev/react"
 import { Sepolia } from "@thirdweb-dev/chains";
 
 const sdk = new ThirdwebSDK(Sepolia);
-const contractAddress = `0x${process.env.Public_key}`;
+const contractAddress = `0x${process.env.PUBLIC_KEY}`;
 
 const ipfs = create({ host: "localhost", port: 5002, protocol: "http" }); // Configure IPFS client
 
@@ -191,15 +191,15 @@ export default function UploadArt() {
           // You can handle the response here as needed
           const data = await addArtwork({
             args: [
-              CID = response.cid,
-              price = price,
-              quantity = 1, //default is 1
-              isLimitedEdition = "false",
-              isAuctioned = "false",
-              auctionEndTime = 100000000000, //random
-              title = name,
-              genre = name, //to be implemented later
-              description = description ,
+              response.cid,
+              price,
+               1, //default is 1
+               "false",
+              "false",
+              100000000000, //random
+              name,
+              name, //to be implemented later
+              description ,
             ],
           });
         }

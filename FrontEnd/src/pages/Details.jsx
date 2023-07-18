@@ -7,7 +7,7 @@ import { ThirdwebSDK } from "@thirdweb-dev/sdk/evm";
 import { Sepolia } from "@thirdweb-dev/chains";
 
 const sdk = new ThirdwebSDK(Sepolia);
-const contractAddress = `0x${process.env.Public_key}`;
+const contractAddress = `0x${process.env.PUBLIC_KEY}`;
 
 export const Details = () => {
 

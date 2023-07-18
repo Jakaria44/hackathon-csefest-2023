@@ -11,14 +11,15 @@ import {
 import { useContext } from "react";
 import { SettingsIcon, BellIcon } from "@chakra-ui/icons";
 import { useNavigate } from "react-router-dom";
+// @ts-ignore
 import { LoggedInContext, LoggedInContextType } from "../../App";
 import { FiShoppingCart } from "react-icons/fi";
 import { RiWallet3Line } from "react-icons/ri";
 import { ConnectWallet } from "@thirdweb-dev/react";
 
-const User: React.FC = () => {
+const User = () => {
   const navigate = useNavigate();
-  const { loggedIn, updateLoginValue }: LoggedInContextType =
+  const { loggedIn, updateLoginValue } =
     useContext(LoggedInContext);
   const handleLogin = () => {
     if (loggedIn) {
