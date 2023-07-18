@@ -52,11 +52,10 @@ export default function UploadArt() {
       data: [selectedFile],
       options: {uploadWithGatewayUrl: true, uploadWithoutDirectory: true},
     });
-    // if(uploadUrl) {
-    //   setSource(uploadUrl[0]);
-    //   console.log("source: " , source);
-    // }
-    console.log(uploadUrl[0]);
+    if(uploadUrl) {
+      setSource(uploadUrl[0]);
+      console.log("source: " , source);
+    }
 
   };
 
