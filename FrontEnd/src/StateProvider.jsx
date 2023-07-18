@@ -1,46 +1,25 @@
-import { useContext, createContext } from "react";
-import { useContract, useContractRead } from "@thirdweb-dev/react";
-import { ThirdwebSDK } from "@thirdweb-dev/sdk/evm";
-import { Sepolia } from "@thirdweb-dev/chains";
+import {useContext, createContext} from "react";
+import {useContract, useContractRead} from "@thirdweb-dev/react";
+const address = "0xe611ad45aA3F35270f52D66c6230bcC558A35EdD";
 
-const sdk = new ThirdwebSDK(Sepolia);
-const contractAddress = `0x${process.env.PUBLIC_KEY}`;
+export const StateContext = createContext(null);
 
-export const StateContext = createContext();
+const StateContextProvider = ({children}) => {
+  const {contract} = useContract(address);
 
-export const StateContextProvider = ({ children }) => {
-  //   const contract = sdk.getContract(contractAddress);
-  const {contract} = useContract(contractAddress);
+  const getValue = async () => {
+    const {data , isLoading} =await useContractRead(contract, "getArtworkCount")
+    if(!isLoading) console.log("inside context, " , data);
 
-  const getData = async () => {
-    console.log("getData");
-    const { data, isLoading } = useContractRead(contract, "artworks");
-    if (data) {
-      console.log("Data paisi");
-      const processedData = data[0].map((item) => {
-        return {
-          CID: item[0],
-          price: parseInt(item[1].hex),
-          isLimitedEdition: item[2],
-          isAuctioned: item[3],
-          auctionEndTime: parseInt(item[4].hex),
-          genre: item[5],
-          title: item[6],
-          id: parseInt(item[7].hex),
-        };
-      });
-
-      return processedData;
-    }
-    console.log("Data painai");
-    return undefined;
+    // return data;
   };
 
   return (
-    <StateContext.Provider value={{ getData }}>
+    <StateContext.Provider value={{ contract}}>
       {children}
     </StateContext.Provider>
   );
 };
 
-export const useStateContext = () => useContext(StateContext);
+// export const useStateContext = () => useContext(StateContext);
+export default StateContext;

@@ -1,13 +1,11 @@
 import ContentGrid from "../components/Contents/ContentGrid";
 import Tabbar from "../components/Contents/Tabbar";
-
 const Contents = () => {
-
   return (
     <>
 
-          <Tabbar />
-          <ContentGrid />
+      <Tabbar/>
+      <ContentGrid/>
 
     </>
   );

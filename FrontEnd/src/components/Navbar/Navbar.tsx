@@ -1,4 +1,4 @@
-import User from "./User";
+// import User from "./User";
 import {
   Box,
   Flex,
@@ -11,6 +11,7 @@ import {
 } from "@chakra-ui/react";
 import { HamburgerIcon, CloseIcon } from "@chakra-ui/icons";
 import NavLink from "./Navlink";
+import {ConnectWallet} from "@thirdweb-dev/react";
 
 const Links = ["Home", "Gallery", "Upload"];
 
@@ -51,7 +52,15 @@ const Navbar: React.FC = () => {
               ))}
             </HStack>
           </HStack>
-          <User />
+          {/*<User />*/}
+          <ConnectWallet
+              dropdownPosition={{
+                side: "right", // "top" | "bottom" | "left" | "right";
+                align: "center", // "start" | "center" | "end";
+              }}
+              theme="dark"
+              btnTitle="Connect Wallet"
+          />
         </Flex>
 
         {isOpen ? (

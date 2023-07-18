@@ -1,47 +1,28 @@
 import { Wrap, WrapItem } from "@chakra-ui/react";
 import { Card } from "./Card";
-import {useEffect, useState} from "react";
-import { ContentData } from "../../assets/Contents";
-
+import {useContext, useEffect, useState} from "react";
 import { useContract, useContractRead } from "@thirdweb-dev/react";
-import { ThirdwebSDK } from "@thirdweb-dev/sdk/evm";
-import { Sepolia } from "@thirdweb-dev/chains";
 
-const sdk = new ThirdwebSDK(Sepolia);
-const contractAddress = "0xe611ad45aA3F35270f52D66c6230bcC558A35EdD";
+import {StateContext} from "../../App";
 
 const ContentGrid = () => {
-  const {contract} = useContract(contractAddress);
-  const [cardData, setCardData] = useState([]);
-  const { data: data, isLoading : isLoading } = useContractRead(contract, "getAllArtworks" );
-  const {data : count, isLoading: countLoading} = useContractRead(contract, "getArtworkCount");
-  const [counter, setCounter] = useState(0);
-  useEffect(() => {
-    if(!isLoading) {
-      setCardData(data);
-
-    }
-  }, [isLoading, data]);
-
-  useEffect(() => {
-    if(!countLoading) {
-      console.log("counter : ", count);
-    }
-  }, [countLoading, count]);
+  const { contract, address} = useContext(StateContext)
+  const { data: allArtworkData, isLoading : allArtworkLoading } = useContractRead(contract, "getAllArtworks" );
+  const { data: count, isLoading : countLoading } = useContractRead(contract, "getArtworkCount" );
 
   return (
     <>
-      {!countLoading && <div>count : {parseInt(count._hex.toString(), 16)}</div>}
+      {!countLoading && <div>Total artworks : {parseInt(count._hex.toString(), 16)}</div>}
       {countLoading && <div>LOADING ...</div>}
       <hr/>
       <Wrap justify="center" minH={"75vh"}>
-        {!isLoading &&
-            cardData.map((card, index) => (
+        {!allArtworkLoading &&
+          allArtworkData.map((data, index) => (
                 <WrapItem key={index}>
-                  <Card {...card} />
+                  <Card {...data} />
                 </WrapItem>
             ))}
-        {isLoading && <p>loading...</p>}
+        {allArtworkLoading && <p>loading...</p>}
       </Wrap>
     </>
 
