@@ -4,15 +4,8 @@ import {useEffect} from "react";
 
 export const Card = (props) => {
   const navigate = useNavigate();
-  
-  const CID = props[0]; //cid from ipfs
-  const price=parseInt(props[1]._hex.toString(), 16); //price of the artwork
-  const isLimitedEdition = props[2];
-  const isAuctioned = props[3]; //is auctioned
-  const auctionEndTime = parseInt(props[4]._hex.toString(), 16); //
-  const genre = props[5]; //
-  const title = props[6]; //
-  const id = parseInt(props[7]._hex.toString(), 16);
+
+  const {CID, price,isLimitedEdition, isAuctioned,auctionEndTime,genre,title ,id} = props;
 
   useEffect(()=>{
     console.log("price");
@@ -38,6 +31,8 @@ export const Card = (props) => {
         </Flex>
         <Flex mt={4}>
           {genre}
+        </Flex><Flex mt={4}>
+          {isLimitedEdition && <p>LimitedEdition</p>}
         </Flex>
         I<Button onClick={()=>{
            navigate(`/details/${id}`);

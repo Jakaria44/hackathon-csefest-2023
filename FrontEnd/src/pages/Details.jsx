@@ -3,11 +3,12 @@ import {useParams} from "react-router-dom";
 import React, {useContext, useEffect} from 'react'
 
 import { useContract, useContractRead } from "@thirdweb-dev/react";
-import {StateContext} from "../App";
+// import {StateContext} from "../App";
+import {useStateContext} from "../Context/StateContext";
 
 const Details = () => {
 
-  const {contract} = useContext(StateContext)
+  const {contract} = useStateContext();
   const params = useParams()
   const id = params.id;
   const { data: certificates, isLoading: cert_loading } = useContractRead(contract, "getCertificateOfArtwork", [id])
