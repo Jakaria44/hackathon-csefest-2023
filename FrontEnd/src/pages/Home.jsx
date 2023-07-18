@@ -3,12 +3,13 @@ import Features from "../components/Home/Features";
 import SubjectCards from "../components/Home/SubjectCards";
 import QuestionForm from "../components/Home/QuestionForm";
 import TrendingArts from "../components/Home/TrendingArts";
+import ContentGrid from "../components/Contents/ContentGrid";
 
 const Home = () => {
   return (
     <>
       <Banner />
-      <SubjectCards />
+      <ContentGrid />
       <TrendingArts />
       <QuestionForm />
       <Features />

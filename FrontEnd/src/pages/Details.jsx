@@ -1,16 +1,13 @@
 
 import {useParams} from "react-router-dom";
-import React, {useEffect} from 'react'
+import React, {useContext, useEffect} from 'react'
 
 import { useContract, useContractRead } from "@thirdweb-dev/react";
-import { ThirdwebSDK } from "@thirdweb-dev/sdk/evm";
-import { Sepolia } from "@thirdweb-dev/chains";
+import {StateContext} from "../App";
 
-const sdk = new ThirdwebSDK(Sepolia);
-const contractAddress = "0xe611ad45aA3F35270f52D66c6230bcC558A35EdD";
 const Details = () => {
 
-  const {contract} = useContract(contractAddress);
+  const {contract} = useContext(StateContext)
   const params = useParams()
   const id = params.id;
   const { data: certificates, isLoading: cert_loading } = useContractRead(contract, "getCertificateOfArtwork", [id])
