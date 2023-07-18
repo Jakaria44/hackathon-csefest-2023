@@ -25,7 +25,7 @@ export default function UploadArt() {
   const [price, setPrice] = useState("");
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
-  // const [uploading, setUploading] = useState(false);
+  const [uploading, setUploading] = useState(false);
   const [source, setSource] = useState("");
   const [localFileUploadURL, setLocalFileUploadURL] = useState(null);
   const [uploadChangeText, setUploadChangeText] = useState("Choose File");
@@ -47,15 +47,14 @@ export default function UploadArt() {
 
 
   const uploadImageToIPFS = async (selectedFile) => {
-    // setUploading(true);
+    setUploading(true);
     const uploadUrl = await upload({
       data: [selectedFile],
       options: {uploadWithGatewayUrl: true, uploadWithoutDirectory: true},
     });
-    if(uploadUrl) {
-      setSource(uploadUrl[0]);
-      console.log("source: " , source);
-    }
+    setSource(uploadUrl[0]);
+    console.log("source: ", source);
+
 
   };
 
@@ -84,14 +83,20 @@ export default function UploadArt() {
                     description
                   ]
               });
-              data.then(res=>{
-                console.info("contract call success", data);
-                // setUploading(false);
-              }).catch(err=>{
-                // if user rejects from wallet;
-                alert("File uploaded to Storage but failed to add to the shop. Please try Again");
-                // setUploading(false);
-              })
+              data
+                .then(res => {
+                  console.info("contract call success", data);
+                  // setUploading(false);
+                  alert("file uploaded successfully");
+                })
+                .catch(err => {
+                  // if user rejects from wallet;
+                  alert("File uploaded to Storage but failed to add to the shop. Please try Again");
+
+                })
+                .finally((() => {
+                  setUploading(false);
+                }))
             } catch (err) {
               console.error("contract call failure", err);
             }
@@ -242,7 +247,7 @@ export default function UploadArt() {
                 boxShadow: "xl",
               }}
 
-              isLoading={addingArtworkLoading}
+              isLoading={addingArtworkLoading || uploading}
               spinner={<Spinner/>}
             >
               Submit

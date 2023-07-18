@@ -25,6 +25,11 @@ const Details = () => {
     }
   }, [cert_loading, bidsLoading])
   useEffect(()=>{
+    // TO DO :
+    // After refreshing the details page, the allArtworks becomes undefined.
+
+
+    console.log(allArtworks);
     const art = allArtworks.filter(item => item.id == id)[0];
     setCID(art.CID);
   },[])
