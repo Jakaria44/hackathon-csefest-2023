@@ -7,47 +7,13 @@ const address = "0x076d1f37a88DfF88cD8E8D8bEE1577BB59c0dc88";
 export const StateContextProvider = ({children}) => {
 
   const {contract} = useContract(address);
-  
-  
-  const [artworkCount, setArtworkCount] = useState(0);
-  const {data: count , isLoading : countLoading} = useContractRead(contract, "getArtworkCount");
-  useEffect(()=>{
-    if(!countLoading) {
-      setArtworkCount(parseInt(count._hex.toString(), 16));
-    }
-  }, [count, countLoading])
-  
-  
-  const [allArtworks, setAllArtworks] = useState([]);
-  const {data: artworks , isLoading : artworksLoading} = useContractRead(contract, "getAllArtworks");
-  useEffect(()=>{
-    if(!artworksLoading) {
-      let array = [];
-      for (const artwork of artworks) {
-        array.push({
-           CID : artwork[0], //cid from ipfs
-           price:parseInt(artwork[1]._hex.toString(), 16), //price of the artwork
-           isLimitedEdition : artwork[2],
-           isAuctioned : artwork[3], //is auctioned
-           auctionEndTime : parseInt(artwork[4]._hex.toString(), 16), //
-           genre : artwork[5], //
-           title : artwork[6], //
-           id : parseInt(artwork[7]._hex.toString(), 16),
-        })
-      }
-      console.log(array);
-      setAllArtworks(array);
-    }
-  }, [artworks, artworksLoading])
 
-  
+
   return (
     <>
       <StateContext.Provider value={{
         contract,
-        address,
-        artworkCount,
-        allArtworks
+        address
       }}>
         {children}
       </StateContext.Provider>

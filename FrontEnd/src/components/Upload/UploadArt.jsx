@@ -1,5 +1,5 @@
 import {AiOutlineUpload} from "react-icons/ai";
-import {useState, ChangeEvent} from "react";
+import {useState, ChangeEvent, useEffect} from "react";
 import {useStorageUpload, MediaRenderer} from "@thirdweb-dev/react";
 import {
   Box,
@@ -13,12 +13,21 @@ import {
   SimpleGrid,
   FormControl,
   Textarea,
-  Spinner
+  Spinner,
+  Alert,
+  AlertIcon, useDisclosure, ModalOverlay, Modal, ModalContent, ModalHeader, ModalCloseButton, ModalBody, ModalFooter
 } from "@chakra-ui/react";
 
 import {useStateContext} from "../../Context/StateContext";
 import {useContractWrite} from "@thirdweb-dev/react";
+import {useNavigate} from "react-router-dom";
 
+const Overlay = () => (
+  <ModalOverlay
+    bg='blackAlpha.300'
+    backdropFilter='blur(10px) hue-rotate(90deg)'
+  />
+)
 export default function UploadArt() {
   const {contract} = useStateContext()
   const [selectedFile, setSelectedFile] = useState(null);
@@ -26,13 +35,16 @@ export default function UploadArt() {
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const [uploading, setUploading] = useState(false);
+  const [uploadSuccessful, setUploadSuccessful] = useState(false);
   const [source, setSource] = useState("");
   const [localFileUploadURL, setLocalFileUploadURL] = useState(null);
   const [uploadChangeText, setUploadChangeText] = useState("Choose File");
 
   const {mutateAsync: upload} = useStorageUpload();
   const {mutateAsync: addArtwork, isLoading: addingArtworkLoading} = useContractWrite(contract, "addArtwork")
-
+  const { isOpen, onOpen, onClose } = useDisclosure();
+  const [overlay, setOverlay] = useState(<Overlay />)
+  const navigate = useNavigate()
 
   const handleFileChange = (event) => {
     const file = event.target.files?.[0];
@@ -42,7 +54,6 @@ export default function UploadArt() {
       setLocalFileUploadURL(localFile);
       setUploadChangeText("Change File");
     }
-
   };
 
 
@@ -51,61 +62,72 @@ export default function UploadArt() {
     const uploadUrl = await upload({
       data: [selectedFile],
       options: {uploadWithGatewayUrl: true, uploadWithoutDirectory: true},
-    });
-    setSource(uploadUrl[0]);
-    console.log("source: ", source);
+    }).then((res) => {
+        setUploadSuccessful(true);
+        setSource(res[0]);
+        console.log(res[0]);
+      }
+    ).catch(err => {
+        console.error(err);
+      }
+    );
 
 
   };
 
   // TO DO:
-  // submit -> upload to ipfs.then(submit to the contract).catch(an error occured)
+  //
   // after submitting : redirect to another page;
+  useEffect(() => {
+    if (uploadSuccessful) {
+      console.log("source before uploading", source);
+      try {
+        const data = addArtwork({
+          args:
+            [
+              source,
+              price,
+              1, //quantity : default 1
+              true, //_isLimitedEdition,
+              false, //_isAuctioned,
+              100000,//_auctionEndTime,
+              name, //title,
+              "genre", //_genre,
+              description
+            ]
+        });
+        data
+          .then(res => {
+            console.info("contract call success", data);
+            // setUploading(false);
+            // alert("file uploaded successfully");
+            setUploadSuccessful(false);
+            setOverlay(<Overlay />)
+            onOpen();
+
+          })
+          .catch(err => {
+            // if user rejects from wallet;
+            alert("File uploaded to Storage but failed to add to the shop. Please try Again");
+
+          })
+          .finally((() => {
+            setUploading(false);
+          }))
+      } catch (err) {
+        console.error("contract call failure", err);
+      }
+    }
+  }, [uploadSuccessful]);
 
   const handleUploadClick = () => {
 
     if (selectedFile) {
-      uploadImageToIPFS(selectedFile)
-        .then(res => {
-            console.log("source before uploading", source);
-            try {
-              const data = addArtwork({
-                args:
-                  [
-                    source,
-                    price,
-                    1, //quantity : default 1
-                    true, //_isLimitedEdition,
-                    false, //_isAuctioned,
-                    100000,//_auctionEndTime,
-                    name, //title,
-                    "genre", //_genre,
-                    description
-                  ]
-              });
-              data
-                .then(res => {
-                  console.info("contract call success", data);
-                  // setUploading(false);
-                  alert("file uploaded successfully");
-                })
-                .catch(err => {
-                  // if user rejects from wallet;
-                  alert("File uploaded to Storage but failed to add to the shop. Please try Again");
-
-                })
-                .finally((() => {
-                  setUploading(false);
-                }))
-            } catch (err) {
-              console.error("contract call failure", err);
-            }
-          }
-        )
-        .catch(error => {
-            alert("an error occurred");
-          }
-        )
+      uploadImageToIPFS(selectedFile).then(res=>{
+        console.log("res: ", res);
+      }).catch(err=>{
+        console.log(err)
+      });
     } else {
       alert("upload file first");
     }
@@ -120,8 +142,32 @@ export default function UploadArt() {
   const handleDescriptionChange = (event) => {
     setDescription(event.target.value); // Update the price state when the input value changes
   };
+
+
   return (
     <Box position={"relative"}>
+      <Modal isCentered isOpen={isOpen} onClose={onClose}>
+        {overlay}
+        <ModalContent>
+          <ModalHeader>Upload Successful</ModalHeader>
+          <ModalCloseButton />
+          <ModalBody>
+            <Text>You've uploaded your work. Thanks!</Text>
+          </ModalBody>
+          <ModalFooter>
+            <Button colorScheme='blue' mr={3} onClick={()=>{
+              onClose();
+              window.location.reload(true);
+            }}>
+              Upload More
+            </Button>
+            <Button variant='ghost' onClick={()=>{
+              onClose();
+              navigate('/gallery');
+            }}>Check in Gallery</Button>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
       <Container
         as={SimpleGrid}
         maxW={"7xl"}

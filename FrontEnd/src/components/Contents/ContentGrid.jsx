@@ -3,18 +3,41 @@ import { Card } from "./Card";
 import {useContext, useEffect, useState} from "react";
 import { useContract, useContractRead } from "@thirdweb-dev/react";
 
-// import {StateContext} from "../../App";
-
 import {useStateContext} from "../../Context/StateContext";
 
 const ContentGrid = () => {
-  const { contract, address, artworkCount, allArtworks} = useStateContext();
-  const { data: allArtworkData, isLoading : allArtworkLoading } = useContractRead(contract, "getAllArtworks" );
-  // const { data: count, isLoading : countLoading } = useContractRead(contract, "getArtworkCount" );
+  const { contract, address} = useStateContext();
+
+  const [allArtworks, setAllArtworks] = useState([]);
+  const {data: artworks , isLoading : artworksLoading} = useContractRead(contract, "getAllArtworks");
+
+  useEffect(()=>{
+    if(!artworksLoading) {
+      let array = [];
+      for (const artwork of artworks) {
+        array.push({
+           CID : artwork[0], //cid from ipfs
+           price:parseInt(artwork[1]._hex.toString(), 16), //price of the artwork
+           isLimitedEdition : artwork[2],
+           isAuctioned : artwork[3], //is auctioned
+           auctionEndTime : parseInt(artwork[4]._hex.toString(), 16), //
+           genre : artwork[5], //
+           title : artwork[6], //
+           id : parseInt(artwork[7]._hex.toString(), 16),
+        })
+      }
+      console.log(array);
+      setAllArtworks(array);
+      // alert(array.length)
+    }
+  }, [artworks, artworksLoading])
+
+
+
 
   return (
     <>
-      <div>Total artworks : {artworkCount}</div>
+
       <hr/>
       <Wrap justify="center" minH={"75vh"}>
         {allArtworks.length &&
@@ -23,7 +46,7 @@ const ContentGrid = () => {
                   <Card {...artwork} />
                 </WrapItem>
             ))}
-        {allArtworkLoading && <p>loading...</p>}
+        {artworksLoading && <p>loading...</p>}
       </Wrap>
     </>
 

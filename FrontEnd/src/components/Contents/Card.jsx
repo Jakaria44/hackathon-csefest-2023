@@ -4,7 +4,7 @@ import {useEffect, useState} from "react";
 import {MediaRenderer} from "@thirdweb-dev/react";
 
 export const Card = (props) => {
-  const navigate = useNavigate()
+  const navigate = useNavigate();
   // const mediaRenderer = new MediaRenderer();
 
   const {CID, price,isLimitedEdition, isAuctioned,auctionEndTime,genre,title ,id} = props;
@@ -19,8 +19,8 @@ export const Card = (props) => {
       shadow="md"
       m={2}
       p={4}
+
     >
-      {/*{cidReal && <p>image not available</p>}*/}
       {  (<MediaRenderer src={CID} alt ={title}/>)}
       <Box mt={4}>
         <Heading as="h2" size="md">
@@ -34,7 +34,7 @@ export const Card = (props) => {
         </Flex><Flex mt={4}>
           {isLimitedEdition && <p>LimitedEdition</p>}
         </Flex>
-        I<Button onClick={()=>{
+        <Button onClick={()=>{
            navigate(`/details/${id}`);
         }} > See Details</Button>
       </Box>
